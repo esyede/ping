@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  SetEnv HTTP_MOD_REWRITE On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.php?url=$1 [PT,L]
+  RewriteRule ^(app/) - [F,L,NC]
+  RewriteRule ^(sys/) - [F,L,NC]
+  RewriteRule ^(res/) - [F,L,NC]
+</IfModule>
+<IfModule !mod_rewrite.c>
+  SetEnv HTTP_MOD_REWRITE Off
+</IfModule>

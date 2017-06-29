@@ -1,0 +1,14 @@
+body{
+    font-family:-apple-system,Arial,sans-serif;
+    font-weight:lighter;
+    font-size:1rem;
+    line-height:1.5;
+    color:#555;
+    background-color:#fff;
+    }
+    img{
+        margin-top:160px;
+        line-height:10px;
+        margin-bottom: 30px;
+    }
+    a{color:#444;}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{ $page_title }}</title>
+        <link rel="stylesheet" href="@BASE/assets/css/home.css" media="screen">
+    </head>
+    <body>
+        <center>
+            <img src="@BASE/assets/images/ping.png" alt="Ping Framework" />
+            <br>
+            {{ $fw_slogan }}
+            <br>
+            v{{ $version }}, {{ $elapsed }} detik, {{ $memory }} ram.
+            [<a href="{{ $docs_link }}">{{ $docs_title }}</a>]
+        </center>
+    </body>
+</html>

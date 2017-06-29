@@ -1,5 +1,6 @@
 
 ![ping framework](assets/images/ping.png)
+
 Lightweight, yet minimalist MVC micro-framework for PHP.
 
 ### System requirements

@@ -56,7 +56,7 @@ class Paginator {
     */
     function max($max) {
         if ($max<3)
-            abort("Max page can't be less than 3",E_USER_ERROR);
+            abort("Max page can't be less than 3");
         $this->max=$max;
     }
 

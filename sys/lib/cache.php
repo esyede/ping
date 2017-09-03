@@ -85,10 +85,9 @@ class Cache {
     *   Kosongkan direktori cache
     */
     function cleanup() {
-        $files=scandir($this->path);
-        foreach ($files as $file) {
+        foreach (scandir($this->path) as $file) {
             $file=$this->path.DS.$file;
-            if ($file[0]!='.'&&$file!='index.html')
+            if (!in_array($file,['.','..','index.html']))
                 @unlink($file);
         }
         return true;

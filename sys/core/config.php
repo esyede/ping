@@ -84,7 +84,7 @@ class Config {
     function load($file,$container,$is_array=false) {
         $container=strtolower($container);
         if (!file_exists($file)) {
-            abort("Can't find config file '%s'",[$file],E_ERROR);
+            abort("Can't find config file '%s'",[$file]);
             return false;
         }
         else include ($file);
@@ -113,7 +113,6 @@ class Config {
             $old=$this->hive[$container];
             $this->hive[$container]=["$contkey"=>$this->hive[$container]];
         }
-
         $content="<?php\n";
         $content.="defined('BASE') or exit('Access Denied!');\n\n";
         foreach ($this->hive[$container] as $key=>$val) {

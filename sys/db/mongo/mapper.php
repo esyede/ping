@@ -55,7 +55,7 @@ class Mapper {
     function init($info=[],$conn=true) {
         if (is_array($info))
             $this->dbinfo=array_merge($info,$this->dbinfo);
-        else abort('No config variables passed');
+        else abort('No config variables supplied');
         $this->parse();
         if ($conn)
             $this->connect();
@@ -676,7 +676,7 @@ class Mapper {
         if (empty($coll))
             abort('No mongodb collection specified to add index to');
         if (empty($cols)||!is_array($cols))
-            abort('Index could not be added to collection, no keysspecified');
+            abort('Index could not be added to collection, no keys specified');
         foreach ($cols as $col=>$val) {
             if ($val===-1||$val===false||strtolower($val)==='desc')
                 $keys[$col]=-1;

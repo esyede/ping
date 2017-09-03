@@ -20,7 +20,7 @@ function __autoload($class) {
         $part=array_shift($part);
     $file=str_replace('\\',DS,BASE.implode('\\',$part).'.php');
     if (!file_exists($file))
-        abort("Autoload failed to load '%s' class",[ucfirst($class)],E_ERROR);
+        abort("Autoload failed to load '%s' class",[ucfirst($class)]);
     require_once $file;
 }
 
@@ -61,7 +61,7 @@ function summon($class,$type='core',$silent=false) {
     $file[$end]=strtolower($file[$end]);
     $file=implode(DS,$file);
     if (!file_exists($file))
-        abort("Autoload failed to load '%s' class",[$cls],E_ERROR);
+        abort("Autoload failed to load '%s' class",[$cls]);
     require($file);
     try {
         $object=new $class();
@@ -71,7 +71,7 @@ function summon($class,$type='core',$silent=false) {
         $object=false;
     }
     if($object==false&&$silent==false)
-        abort("Autoload failed to initialize '%s' class : %s",[$cls,$msg],E_ERROR);
+        abort("Autoload failed to initialize '%s' class : %s",[$cls,$msg]);
     \Base::instance()->save($name,$object);
     return $object;
 }
@@ -121,10 +121,8 @@ function abort($error='none',$arg=null,$level=E_ERROR) {
 *   @param $code int
 *   @param $msg string
 */
-function error($code,$msg=null) {
-    if (!empty($msg))
-        summon('logger')->abort((int)$code,$msg);
-    else summon('logger')->abort((int)$code);
+function error($code=404,$msg=null) {
+    summon('logger')->abort($code,$msg);
 }
 
 /**

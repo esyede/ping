@@ -27,7 +27,7 @@ class Mapper {
         $this->fcache=[];
         if (!is_dir($this->path)) {
             if (!mkdir($this->path))
-                abort("Can't create table, access denied to %s",[$this->path],E_ERROR);
+                abort("Can't create table, access denied to %s",[$this->path]);
             else file_put_contents($this->path."index.php","<?php /* don't remove this! */ ?>");
         }
     }
@@ -55,15 +55,15 @@ class Mapper {
     */
     function insert($object) {
         if (!is_array($object))
-            abort('Jong can only write array',E_ERROR);
+            abort('Jong can only write array');
         if ($this->query->executed())
-            abort('The query already executed',E_ERROR);
+            abort('The query already executed');
         $table=$this->query->table;
         $id=0;
         $meta=null;
         if (!is_dir($this->path.$table)) {
             if (!@mkdir($this->path.$table,0777))
-                abort("Can't create table directory for '%s' access denied",[$table],E_ERROR);
+                abort("Can't create table directory for '%s' access denied",[$table]);
             else file_put_contents($this->path.$table.DS."index.php","<?php /* don't remove this! */ ?>");
             $id=1;
             $meta=[
@@ -82,8 +82,7 @@ class Mapper {
         if (array_key_exists($table,$this->indexes)) {
             foreach ($this->indexes[$table] as $index) {
                 if (!$object[$index])
-                    abort("Table '%s' has an index on '%s', but trying to ignore that field",
-                        [$table,$index],E_USER_ERROR);
+                    abort("Table '%s' has an index on '%s', but trying to ignore that field",[$table,$index]);
                 $meta['index'][$index][]=$object[$index];
             }
         }
@@ -103,11 +102,11 @@ class Mapper {
     */
     function update($id,$val) {
         if ($this->query->executed())
-            abort("Query already executed",E_USER_ERROR);
+            abort("Query already executed");
         $table=$this->query->table;
         $files=$this->path.$table.DS.'_'.$id.'.php';
         if (!file_exists($files))
-            abort("Can't find data with id '%s'",[$id],E_ERROR);
+            abort("Can't find data with id '%s'",[$id]);
         $meta=$this->properties();
         $old=$this->read($files,false);
         $updated=false;
@@ -143,7 +142,7 @@ class Mapper {
     */
     function delete($id) {
         if ($this->query->executed())
-            abort("Query already executed",E_USER_ERROR);
+            abort("Query already executed");
         $table=$this->query->table;
         if (is_array($id)) {
             foreach ($id as $index)
@@ -151,7 +150,7 @@ class Mapper {
             return $this;
         }
         if (!file_exists($this->path.$table.DS.'_'.$id.'.php'))
-            abort("Can't find data with id '%s'",[$id],E_ERROR);
+            abort("Can't find data with id '%s'",[$id]);
         $meta=$this->properties();
         $key=array_search($id,$meta['index']['id']);
         foreach (array_keys($meta['index']) as $index)
@@ -186,7 +185,7 @@ class Mapper {
         }
         $meta=$this->properties();
         if (!array_key_exists($column,$meta['index']))
-            abort("Field '%s' is  not a table index",[$column],E_ERROR);
+            abort("Field '%s' is  not a table index",[$column]);
         $array_idx=array_search($val,$meta['index'][$column]);
         if (false===$array_idx)
             return null;
@@ -289,7 +288,7 @@ class Mapper {
         if (!array_key_exists($table,$this->fcache)) {
             $path=$this->path.$table.DS.'meta.php';
             if (!file_exists($path))
-                abort("Can't find metadata for table '%s'",[$table],E_ERROR);
+                abort("Can't find metadata for table '%s'",[$table]);
             $this->fcache[$table]=$this->read($path,false);
         }
         return $this->fcache[$table];
@@ -302,9 +301,9 @@ class Mapper {
     function indexes($arr) {
         $table=$this->query->table;
         if (!$table)
-            abort("Can't define an index, table is not specified",E_USER_ERROR);
+            abort("Can't define an index, table is not specified");
         if (!is_array($arr))
-            abort("Index definition muast be an array",E_USER_ERROR);
+            abort("Index definition muast be an array");
         if (!in_array('id',$arr))
             $arr[]='id';
         $this->indexes[$table]=$arr;
@@ -331,7 +330,7 @@ class Mapper {
     */
     private function findbyid() {
         if ($this->query->executed())
-            abort("Query already executed",E_USER_ERROR);
+            abort("Query already executed");
         $table=$this->query->table;
         $fetch=$this->query->fetch;
         $id=$this->query->id;
@@ -362,7 +361,7 @@ class Mapper {
     */
     private function findall() {
         if ($this->query->executed())
-            abort("Query already executed",E_USER_ERROR);
+            abort("Query already executed");
         $table=$this->query->table;
         $order=$this->query->order;
         $limit=$this->query->limit;
@@ -402,7 +401,7 @@ class Mapper {
                 $entry=$this->read($table.DS.'_'.$id.'.php');
                 $add=true;
                 if (is_callable($where))
-                    abort("Closing with 'where' clause is not allowed",E_ERROR);
+                    abort("Closing with 'where' clause is not allowed");
                 else {
                     foreach ($where as $key=>$value) {
                         if (array_key_exists($key,$entry)&&is_array($entry[$key])) {

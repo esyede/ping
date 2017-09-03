@@ -49,7 +49,7 @@ class Session {
         $this->web=summon('web');
         if ($this->usingdb==true) {
             if (!array_key_exists($this->container,$this->config->getall('db')))
-                abort("Database credentials for '%s' can't be found on config file",[$this->container],E_ERROR);
+                abort("Database credentials for '%s' can't be found on config file",[$this->container]);
             else $this->dbs=$this->load->db($this->container);
             if (!$this->dbexist())
                 $this->maketable();
@@ -92,13 +92,13 @@ class Session {
                     ->table($this->table)
                     ->where($this->info['ctoken'],$token)
                     ->one();
-                $count=sizeof($result);
+                $count=count($result);
                 $this->dbs->reset();
             }
             elseif (strpos($this->driver,'mongo')!==false) {
                 $this->driver='mongo';
                 $result=null; // TODO: mongo select document based on 'ctoken'
-                $count=sizeof($result);
+                $count=count($result);
             }
             elseif (strpos($this->driver,'jong')!==false) {
                 $this->driver='jong';
@@ -107,7 +107,7 @@ class Session {
                     ->table($this->table)
                     ->where([$this->info['ctoken']=>$token])
                     ->all();
-                $count=sizeof($result);
+                $count=count($result);
             }
             if ($count>0) {
                 $this->data_exist=true;

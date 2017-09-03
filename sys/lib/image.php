@@ -205,7 +205,7 @@ class Image {
             else $data=fread($f,filesize($this->cache(true)));
             fclose($f);
         }
-        else abort("Can't open file '%s'",[$this->cache(true)],E_ERROR);
+        else abort("Can't open file '%s'",[$this->cache(true)]);
         return $data;
     }
 
@@ -225,7 +225,7 @@ class Image {
                 $ctype='image/jpeg';
                 break;
             default:
-                abort("Unknown file type '%s'",[$this->type],E_ERROR);
+                abort("Unknown file type '%s'",[$this->type]);
                 break;
         }
         return $ctype;
@@ -261,7 +261,7 @@ class Image {
                 $gd=imagecreatefromjpeg($file);
                 break;
             default:
-                abort("Unknown file type '%s'",[$type],E_ERROR);
+                abort("Unknown file type '%s'",[$type]);
                 break;
         }
         return $gd;
@@ -365,7 +365,7 @@ class Image {
                     $raw=ob_get_clean();
                 break;
             default:
-                abort("Unknown file type '%s'",[$this->type],E_ERROR);
+                abort("Unknown file type '%s'",[$this->type]);
                 break;
         }
         return $raw;

@@ -139,28 +139,36 @@ class Logger {
     *   @param $msg string
     *   @param $http string
     */
-    function abort($code,$msg=null,$http='HTTP/1.0') {
+    function abort($code=null,$msg=null,$http='HTTP/1.0') {
         if (ob_get_level()!=0)
             ob_end_clean();
         $path=APP.'view'.DS.'error'.DS.(string)$code.'.html';
-        if (file_exists($path)) {
-            include ($path);
-            die();
+        if (is_int($code)) {
+            if (file_exists($path)) {
+                include ($path);
+                die();
+            }
+            elseif (array_key_exists((int)$code,$this->codes)) {
+                if (empty($msg))
+                    $msg=$this->codes[$code];
+                header('X-Powered-By: '.summon('loader')->sysinfo('package'));
+                header("Status: ".(string)$code,false,(string)$code);
+                header('Content-type: application/json',true,$code);
+                echo json_encode([
+                    'error'=>[
+                        'code'=>$code,
+                        'message'=>$this->codes[$code]
+                    ]
+                ]);
+                die();
+            }
+            else abort("Not a valid http status code '%s'",[$code]);
         }
-        elseif (array_key_exists($code,$this->codes)) {
-            if (empty($msg))
-                $msg=$this->codes[$code];
-            $detail=summon('router')->detail();
-            header('X-Powered-By: '.summon('loader')->sysinfo('package'));
-            header("Status: {$code}",false,$code);
-            header('Content-type: application/json',true,$code);
-            echo json_encode([
-                'error'=>[
-                    'code'=>$code,
-                    'message'=>$this->codes[$code]
-                ]
-            ]);
-            die();
+        elseif (is_string($code)) {
+            if (file_exists($path)) {
+                include ($path);
+                die();
+            }
         }
         else abort("Not a valid http status code '%s'",[$code]);
     }

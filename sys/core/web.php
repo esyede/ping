@@ -109,11 +109,11 @@ class Web {
     */
     function hash($str,$salt=null,$cost=10) {
         if ($cost<4||$cost>31)
-            abort("Invalid cost parameter '%s'",[$cost],E_USER_ERROR);
+            abort("Invalid cost parameter '%s'",[$cost]);
         $len=22;
         if ($salt) {
             if (!preg_match('/^[[:alnum:]\.\/]{'.$len.',}$/',$salt))
-                abort("Salt must be 22 alphanumeric characters",E_USER_ERROR);
+                abort("Salt must be 22 alphanumeric characters");
         }
         else {
             $line=16;
@@ -217,7 +217,7 @@ class Web {
             case '!==':
                 return $a!==$b;
             default:
-                abort("Unidentified operator '%s'",[$operator],E_USER_ERROR);
+                abort("Unidentified operator '%s'",[$operator]);
         }
     }
 

@@ -32,7 +32,7 @@ class Benchmark {
     */
     function elapsed($key,$round=3,$stop=false) {
         if (!isset($this->start[$key])) {
-            abort("Benchmark key '%s' not found",[$key],E_WARNING);
+            abort("Benchmark key '%s' not found",[$key]);
             return false;
         }
         else {

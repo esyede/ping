@@ -74,7 +74,7 @@ class Recaptcha {
     function render() {
         $web=summon('web');
         if (!$this->getpubkey())
-            abort('You must set public key provided by reCaptcha',null,E_ERROR);
+            abort('You must set public key provided by reCaptcha');
         return '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'.
             '<div class="g-recaptcha" data-sitekey="'.$this->getpubkey().
             '" data-theme="'.$this->theme.'" data-type="'.$this->type.'" data-size="'.$this->size.
@@ -83,7 +83,7 @@ class Recaptcha {
 
     function check($response=false) {
         if (!$this->getprivkey())
-            abort('You must set private key provided by reCaptcha',null,E_ERROR);
+            abort('You must set private key provided by reCaptcha');
         if (!$response)
             if ($web->post('g-recaptcha-response'))
                 $response=$web->post('g-recaptcha-response');
@@ -114,7 +114,7 @@ class Recaptcha {
         $param=http_build_query($param);
         $res=@file_get_contents('https://'.self::VERIFY_SERVER.'/recaptcha/api/siteverify?'.$param);
         if (!$res)
-            abort("Unable to communicate with reCaptcha servers. Response: %s",[serialize($res)],E_ERROR);
+            abort("Unable to communicate with reCaptcha servers. Response: %s",[serialize($res)]);
         return $res;
     }
 
@@ -136,7 +136,7 @@ class Recaptcha {
 
     function theme($theme) {
         if (!self::checktheme($theme))
-            abort("Theme '%s' is not valid. Please use one of [%s]",[$theme,join(', ',['light','dark'])],E_ERROR);
+            abort("Theme '%s' is not valid. Please use one of [%s]",[$theme,join(', ',['light','dark'])]);
         $this->theme=(string)$theme;
         return $this;
     }
@@ -144,7 +144,7 @@ class Recaptcha {
 
     function size($size) {
         if (!self::checksize($size))
-            abort("Size '%s' is not valid. Please use one of [%s]",[$size,join(', ',['normal','compact'])],E_ERROR);
+            abort("Size '%s' is not valid. Please use one of [%s]",[$size,join(', ',['normal','compact'])]);
         $this->size=(string)$size;
         return $this;
     }
@@ -152,7 +152,7 @@ class Recaptcha {
 
     function type($type) {
         if (!self::checksize($type))
-            abort("Type '%s' is not valid. Please use one of [%s]",[$type,join(', ',['image','audio'])],E_ERROR);
+            abort("Type '%s' is not valid. Please use one of [%s]",[$type,join(', ',['image','audio'])]);
         $this->type=(string)$type;
         return $this;
     }
@@ -160,7 +160,7 @@ class Recaptcha {
 
     function tabindex($tabindex) {
         if (!is_numeric($tabindex))
-            abort("Tab index of '%s' is not valid.",[$tabindex],E_ERROR);
+            abort("Tab index of '%s' is not valid.",[$tabindex]);
         $this->tabindex=(int)$tabindex;
         return $this;
     }

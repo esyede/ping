@@ -21,7 +21,7 @@ class Loader {
     *   @param $silent bool
     */
     function lib($name,$instance=true,$silent=false) {
-        if (strpos($name,".")!==false)
+        if (strpos($name,'.')!==false)
             $name=str_replace('.',DS,$name);
         $class=summon(ucfirst($name),'Lib',$silent);
         if ($instance!==false) {
@@ -38,7 +38,7 @@ class Loader {
     *   @param $name string
     */
     function plugin($name,$instance=true,$silent=false) {
-        if (strpos($name,".")!==false)
+        if (strpos($name,'.')!==false)
             $name=str_replace('.',DS,$name);
         $class=summon(ucfirst($name),'Plugin',$silent);
         if ($instance!==false) {
@@ -58,7 +58,7 @@ class Loader {
     */
     function db($container,$instance=true,$silent=false) {
         if (!is_array($container)) {
-            $object=\Base::instance()->load("connection_".$container);
+            $object=\Base::instance()->load('connection_'.$container);
             if ($object!==null) {
                 if ($instance!=false)
                     goto Instance;
@@ -66,7 +66,7 @@ class Loader {
             }
             $info=summon('config')->get($container,'db');
             if ($info===null)
-                abort("Database credentials for '%s' can't be found on config file",[$container],E_ERROR);
+                abort("Database credentials for '%s' can't be found on config file",[$container]);
         }
         else {
             $info=$container;
@@ -91,8 +91,7 @@ class Loader {
             $object=false;
         }
         if ($silent==false&&$object==false)
-            abort("Can't connect to database '%s' via %s:%s",
-                [$info['database'],$info['host'],$info['port']],E_ERROR);
+            abort("Can't connect to database '%s' via %s:%s",[$info['database'],$info['host'],$info['port']]);
         \Base::instance()->save("connection_".$container,$object);
         Instance:
         {
@@ -132,7 +131,7 @@ class Loader {
     */
     function view($name,$data=[],$callback=false) {
         if (!is_array($data)) {
-            abort("Variable '%s' has a non-array format on '%s' method",[$data,'Loader::view'],E_WARNING);
+            abort("Variable '%s' has a non-array format on '%s' method",[$data,'view()']);
             $data=[];
         }
         $file=APP.'view'.DS.$name;
@@ -147,7 +146,7 @@ class Loader {
             return $content;
         }
         else {
-            abort("Can't find vew file '%s'",[$name],E_ERROR);
+            abort("Can't find view file '%s'",[$name]);
             return false;
         }
     }

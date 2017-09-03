@@ -53,7 +53,7 @@ class Mapper {
                 (isset($info['port'])?$info['port']:'3306').'/'.$info['database']);
         }
         catch (\PDOException $e) {
-            seterror($e->getMessage(),E_ERROR);
+            abort("Can't establish database connection: %s",[$e->getMessage()]);
         }
         if (!empty($info['cache']))
             $this->setcache(strtolower($info['cache']));
@@ -112,7 +112,7 @@ class Mapper {
     */
     function checktable() {
         if (!$this->table)
-            abort("Table is not defined.",null,E_ERROR);
+            abort("Table is not defined.");
     }
 
     /**
@@ -120,7 +120,7 @@ class Mapper {
     */
     function checkclass() {
         if (!$this->class)
-            abort("Class is not defined.",null,E_ERROR);
+            abort("Class is not defined.");
     }
 
     /**
@@ -189,7 +189,7 @@ class Mapper {
             }
             return $str;
         }
-        else abort('Invalid where condition.',null,E_ERROR);
+        else abort('Invalid where condition.');
     }
 
     /**
@@ -213,7 +213,7 @@ class Mapper {
     function join($table,array $fields,$type='INNER') {
         static $joins=['INNER','LEFT OUTER','RIGHT OUTER','FULL OUTER'];
         if (!in_array($type,$joins))
-            abort('Invalid join type.',null,E_ERROR);
+            abort('Invalid join type.');
         $this->joins.=' '.$type.' JOIN '.$table.$this->parsecondition($fields,null,' ON',false);
         return $this;
     }
@@ -438,7 +438,7 @@ class Mapper {
                 case 'mysqli':
                     $this->db=new \MySQLi($db['hostname'],$db['username'],$db['password'],$db['database']);
                     if ($this->db->connect_error)
-                        abort('Connection error: %s',[$this->db->connect_error],E_ERROR);
+                        abort('Connection error: %s',[$this->db->connect_error]);
                     break;
                 case 'pgsql':
                     $str=sprintf('host=%s dbname=%s user=%s password=%s',
@@ -448,7 +448,7 @@ class Mapper {
                 case 'sqlite':
                     $this->db=sqlite_open($db['database'],0666,$error);
                     if (!$this->db)
-                        abort("Connection error: %s",[$error],E_ERROR);
+                        abort("Connection error: %s",[$error]);
                     break;
                 case 'sqlite3':
                     $this->db=new \SQLite3($db['database']);
@@ -471,13 +471,13 @@ class Mapper {
                     break;
             }
             if ($this->db==null)
-                abort('Undefined database.',null,E_ERROR);
+                abort('Undefined database.');
             $this->dbtype=$db['driver'];
         }
         else {
             $type=$this->dbtype($db);
             if (!in_array($type,self::$dbdriver))
-                abort('Invalid database type.',null,E_ERROR);
+                abort('Invalid database type.');
             $this->db=$db;
             $this->dbtype=$type;
         }
@@ -517,7 +517,7 @@ class Mapper {
     */
     function execute($key=null,$expire=0) {
         if (!$this->db)
-            abort('Database is not defined.',null,E_ERROR);
+            abort('Database is not defined.');
         if ($key!==null) {
             $result=$this->fetch($key);
             if ($this->iscached)
@@ -549,7 +549,7 @@ class Mapper {
                             $this->lastid=$this->db->lastInsertId();
                         }
                     }
-                    catch(PDOException $ex) {
+                    catch(\PDOException $ex) {
                         $error=$ex->getMessage();
                     }
                     break;
@@ -597,7 +597,7 @@ class Mapper {
             if ($error!==null) {
                 if ($this->showsql)
                     $error.="\nSQL: ".$this->sql;
-                abort("Database error: %s",[$error],E_ERROR);
+                abort("Database error: %s",[$error]);
             }
         }
         if ($this->staton) {
@@ -629,7 +629,7 @@ class Mapper {
         else {
             switch ($this->dbtype) {
                 case 'pdo':
-                    $data=$result->fetchAll(PDO::FETCH_ASSOC);
+                    $data=$result->fetchAll(\PDO::FETCH_ASSOC);
                     $this->numrows=sizeof($data);
                     break;
                 case 'mysql':
@@ -801,7 +801,7 @@ class Mapper {
         else if (is_object($cache)) {
             $type=strtolower(get_class($cache));
             if (!in_array($type,self::$cachedriver))
-                abort("Invalid or unsupported cache type '%s'",[$type],E_ERROR);
+                abort("Invalid or unsupported cache type '%s'",[$type]);
             $this->cache=$cache;
             $this->cachetype=$type;
         }
@@ -856,7 +856,7 @@ class Mapper {
         switch ($this->cachetype) {
             case 'memcached':
                 $value=$this->cache->get($key);
-                $this->iscached=($this->cache->getResultCode()==Memcached::RES_SUCCESS);
+                $this->iscached=($this->cache->getResultCode()==\Memcached::RES_SUCCESS);
                 return $value;
             case 'memcache':
                 $value=$this->cache->get($key);

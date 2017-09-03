@@ -71,14 +71,14 @@ class Controller implements \ArrayAccess {
         else $url=$base.$url;
         try {
             ob_start();
-            if ($wait<0)
+            if ($wait>0)
                 header('Refresh:'.$wait.';url='.$url);
             else header('Location: '.$url);
             ob_end_flush();
             exit;
         }
         catch (\Exception $ex) {
-            abort("Can't redirect to specified url: %s",[$url],E_ERROR);
+            abort("Can't redirect to specified url: %s",[$url]);
         }
     }
 
@@ -221,17 +221,17 @@ class Controller implements \ArrayAccess {
 
 
     /**
-    *   Kosongkan hive
+    *   Kosongkan path hive
     *   @param $key mixed
     */
-    function clear($key=null) {
-        if (is_string($key))
-            $this->set($key,[]);
-        elseif (is_array($key))
-            foreach ($key as $k)
-                $this->clear($k);
-        elseif (is_null($key))
-            $this->hive=[];
+    function drain($key) {
+        if ($this->exists($this->hive,$key)) {
+            if (is_string($key))
+                $this->set($key,[]);
+            elseif (is_array($key))
+                foreach ($key as $k)
+                    $this->drain($k);
+        }
     }
 
     /**
@@ -281,7 +281,7 @@ class Controller implements \ArrayAccess {
     *   @param $value array
     */
     function accessible($value) {
-        return is_array($value)||$value instanceof ArrayAccess;
+        return is_array($value)||$value instanceof \ArrayAccess;
     }
 
     /**
@@ -290,7 +290,7 @@ class Controller implements \ArrayAccess {
     */
     function isassoc($hive=null) {
         $keys=is_array($hive)?array_keys($hive):array_keys($this->hive);
-        return array_keys($keys) !== $keys;
+        return array_keys($keys)!==$keys;
     }
 
     /**

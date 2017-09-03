@@ -21,15 +21,12 @@ class Template extends Preview {
     /**
     *   Konstruktor kelas
     */
-    function __construct($config=[]) {
-        $config=array_replace_recursive([
-            'cache'=>RES.'template',
-            'echo'=>'htmlspecialchars(%s,ENT_QUOTES,\'UTF-8\')'
-        ],$config);
-        $this->cache=isset($config['cache'])?$config['cache']:RES.'template';
-        $this->format=isset($config['echo'])?$config['echo']:'%s';
-        parent::__construct($config);
-        $this->base=summon('loader')->sysinfo('base');
+    function __construct() {
+        $this->load=summon('loader');
+        $this->cache=RES.'template';
+        $this->format="htmlspecialchars(%s,ENT_QUOTES,'UTF-8')";
+        parent::__construct();
+        $this->base=$this->load->sysinfo('base');
     }
 
     /**
@@ -74,16 +71,16 @@ class Template extends Preview {
     */
     protected function _echo($vars) {
         $vars=preg_replace_callback('/\{\{\{\s*(.+?)\s*\}\}\}(\r?\n)?/s',function ($found) {
-            $space=empty($found[2])?'':$found[2].$found[2];
+            $space=empty($found[2])?'':$found[2];
             return '<?php echo htmlspecialchars('.
-                $this->_echodefault($found[1]).',ENT_QUOTES,\'UTF-8\')?>'.$space;
+                $this->_echodefault($found[1]).",ENT_QUOTES,'UTF-8')?>".$space;
         },$vars);
         $vars=preg_replace_callback('/\{\!!\s*(.+?)\s*!!\}(\r?\n)?/s',function ($found) {
-            $space=empty($found[2])?'':$found[2].$found[2];
+            $space=empty($found[2])?'':$found[2];
             return '<?php echo '.$this->_echodefault($found[1]).'?>'.$space;
         },$vars);
         $vars=preg_replace_callback('/(@)?\{\{\s*(.+?)\s*\}\}(\r?\n)?/s',function ($found) {
-            $space=empty($found[3])?'':$found[3].$found[3];
+            $space=empty($found[3])?'':$found[3];
             return $found[1]?substr($found[0],1):'<?php echo '.
                 sprintf($this->format,$this->_echodefault($found[2])).'?>'.$space;
         },$vars);
@@ -103,7 +100,7 @@ class Template extends Preview {
     *   @param $vars string
     */
     protected function _if($condition) {
-        return "<?php if{$condition}:?>";
+        return "<?php if {$condition}:?>";
     }
 
     /**
@@ -111,7 +108,7 @@ class Template extends Preview {
     *   @param $vars string
     */
     protected function _elseif($condition) {
-        return "<?php elseif{$condition}:?>";
+        return "<?php elseif {$condition}:?>";
     }
 
     /**
@@ -127,7 +124,7 @@ class Template extends Preview {
     *   @param $vars string
     */
     protected function _unless($condition) {
-        return "<?php if(!$condition):?>";
+        return "<?php if (!$condition):?>";
     }
 
     /**
@@ -143,7 +140,7 @@ class Template extends Preview {
     *   @param $vars string
     */
     protected function _for($condition) {
-        return "<?php for{$condition}:?>";
+        return "<?php for {$condition}:?>";
     }
 
     /**
@@ -159,7 +156,7 @@ class Template extends Preview {
     *   @param $vars string
     */
     protected function _foreach($condition) {
-        return "<?php foreach{$condition}:?>";
+        return "<?php foreach {$condition}:?>";
     }
 
     /**
@@ -175,7 +172,7 @@ class Template extends Preview {
     *   @param $vars string
     */
     protected function _while($condition) {
-        return "<?php while{$condition}:?>";
+        return "<?php while {$condition}:?>";
     }
 
     /**
@@ -271,7 +268,7 @@ class Preview {
     /**
     *   Konstruktor kelas
     */
-    function __construct($config=[]) {
+    function __construct() {
         $this->block=[];
         $this->stack=[];
     }
@@ -316,6 +313,17 @@ class Preview {
     */
     function exists($name) {
         return file_exists($this->tpl($name));
+    }
+
+    /**
+    *   Kosongkan direktori cache template
+    */
+    function cleanup() {
+        foreach (scandir($this->cache) as $file) {
+            if (!in_array($file,['.','..','index.html']))
+                @unlink($this->cache.DS.$file);
+        }
+        return true;
     }
 
     /**

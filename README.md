@@ -1,5 +1,9 @@
+**[ABANDONED]** Reason:
+
+Too complicated + route-guessing is awful = Yeah, I'm stupid
 
 ![ping framework](assets/images/ping.png)
+
 Lightweight, yet minimalist MVC micro-framework for PHP.
 
 ### System requirements
@@ -7,8 +11,7 @@ Lightweight, yet minimalist MVC micro-framework for PHP.
  * Webserver (optional, you can use PHP built-in webserver)
 
 ### Documentation
-See the full documentation on [official site](http://pingframework.com)
-
+Download current documentation [HERE](http://upfile.mobi/CahJMHlfFw7). It's built on top of this framework itself
 
 ### Code example:
 ```php
